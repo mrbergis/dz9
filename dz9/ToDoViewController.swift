@@ -62,7 +62,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, complete in
+        let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") { _, _, complete in
                 self.realmDatabase ? RealmDatabase.shared.deleteTask(currentTask: indexPath.row) : CoreDataDatabase.shared.deleteTask(currentTask: indexPath.row)
                 if self.realmDatabase{
                     self.tasksRealm = RealmDatabase.shared.loadTasks()
@@ -71,11 +71,16 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate{
                 }
                 self.tableView.reloadData()
                     
-                }
+        }
+        let editingAction = UIContextualAction(style: .destructive, title: "Изменить") { _, _, complete in
+            
+            print("Нажато")
+                    
+        }
                 
                 deleteAction.backgroundColor = .red
-                
-                let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+                editingAction.backgroundColor = .gray
+                let configuration = UISwipeActionsConfiguration(actions: [deleteAction,editingAction])
                 configuration.performsFirstActionWithFullSwipe = true
                 return configuration
     }
