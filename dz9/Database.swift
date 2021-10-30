@@ -13,16 +13,17 @@ import UIKit
 protocol Database {
     func saveTask(task: String)
     func loadTasks() -> [String]
-    func updateTask()
+    func updateTask(currentTask: Int)
     func deleteTask(currentTask: Int)
 }
 
 
 class ItemRealm: Object {
     @objc dynamic var task = ""
+    @objc dynamic var taskComplete = false
 }
 
-class RealmDatabase: Database{
+class RealmDatabase {
 
     static let shared = RealmDatabase()
     
@@ -38,18 +39,22 @@ class RealmDatabase: Database{
         }
     }
     //R
-    func loadTasks() -> [String]{
+    func loadTasks() -> [ItemRealm]{
         let allTasks = realm.objects(ItemRealm.self)
-        var allTasksArray: [String] = []
-        for taskString in allTasks{
-            allTasksArray.append(taskString.task)
+        var itemRealm: [ItemRealm] = []
+        for task in allTasks{
+            itemRealm.append(task)
         }
         self.todoItems = allTasks
-        return allTasksArray
+        return itemRealm
     }
     //U
-    func updateTask(){
-        
+    func updateTask(currentTask: Int){
+        if let item = todoItems?[currentTask]{
+            try! realm.write {
+                item.taskComplete = !item.taskComplete
+            }
+        }
     }
     //D
     func deleteTask(currentTask: Int){
@@ -62,7 +67,7 @@ class RealmDatabase: Database{
     
 }
 
-class CoreDataDatabase: Database{
+class CoreDataDatabase{
     static let shared =  CoreDataDatabase()
     
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -74,7 +79,7 @@ class CoreDataDatabase: Database{
         saveItems()
     }
     
-    func loadTasks() -> [String] {
+    func loadTasks() -> [ItemCoreData] {
         let request : NSFetchRequest<ItemCoreData> = ItemCoreData.fetchRequest()
                //NSFetchRequest - будет извлекать резултаты в виде элементов
                //NSFetchRequest<Item> - мы указываем тип данных чтобы точно направить запрос в какую таблицу нам надо
@@ -83,15 +88,16 @@ class CoreDataDatabase: Database{
                } catch {
                    print("Error fetching data from context \(error)")
                }
-        var allTasksArray: [String] = []
-        for taskString in itemArray{
-            allTasksArray.append(taskString.task!)
-        }
-        return allTasksArray
+//        var allTasksArray: [String] = []
+//        for taskString in itemArray{
+//            allTasksArray.append(taskString.task!)
+//        }
+        return itemArray
     }
     
-    func updateTask() {
-        
+    func updateTask(currentTask: Int){
+        itemArray[currentTask].taskComplete = !itemArray[currentTask].taskComplete
+        saveItems()
     }
     
     func deleteTask(currentTask: Int) {
