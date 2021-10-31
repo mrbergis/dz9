@@ -49,10 +49,11 @@ class RealmDatabase {
         return itemRealm
     }
     //U
-    func updateTask(currentTask: Int){
+    func updateTask(currentTask: Int, changeText: String, changeComplete: Bool){
         if let item = todoItems?[currentTask]{
             try! realm.write {
-                item.taskComplete = !item.taskComplete
+                item.taskComplete = changeComplete
+                item.task = changeText
             }
         }
     }
@@ -95,8 +96,9 @@ class CoreDataDatabase{
         return itemArray
     }
     
-    func updateTask(currentTask: Int){
-        itemArray[currentTask].taskComplete = !itemArray[currentTask].taskComplete
+    func updateTask(currentTask: Int, changeText: String, changeComplete: Bool){
+        itemArray[currentTask].taskComplete = changeComplete
+        itemArray[currentTask].task = changeText
         saveItems()
     }
     

@@ -309,12 +309,20 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yCc-2n-7bu">
+                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yCc-2n-7bu">
                                         <rect key="frame" x="0.0" y="479" width="414" height="329"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Создать"/>
                                         <connections>
                                             <action selector="createTask:" destination="pOs-d8-MnW" eventType="touchUpInside" id="CXi-rd-Y8b"/>
+                                        </connections>
+                                    </button>
+                                    <button hidden="YES" opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0J9-BU-xhb">
+                                        <rect key="frame" x="0.0" y="808" width="414" height="0.0"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Изменить"/>
+                                        <connections>
+                                            <action selector="createTask:" destination="pOs-d8-MnW" eventType="touchUpInside" id="GxF-ZP-8NA"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -331,6 +339,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="jPG-md-7BU"/>
                     <connections>
+                        <outlet property="changeButton" destination="0J9-BU-xhb" id="NNl-2Q-HXN"/>
+                        <outlet property="createButton" destination="yCc-2n-7bu" id="ZJS-Ee-Sdl"/>
                         <outlet property="textTaskTextField" destination="99P-n1-vWY" id="gYJ-4J-m4B"/>
                     </connections>
                 </viewController>

@@ -12,6 +12,8 @@ class ToDoViewController: UIViewController {
     var realmDatabase = true
     var tasksRealm : [ItemRealm] = []
     var tasksDataCore: [ItemCoreData] = []
+    var currentTask = 0
+    var currentText = ""
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -27,7 +29,16 @@ class ToDoViewController: UIViewController {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let vc = segue.destination as? CreateTaskViewController, segue.identifier == "ShowCreateTask"{
+            if (sender as? UIButton) == nil{
+                //vc.textTaskTextField =
+                vc.currentTask = currentTask
+                vc.currentText = currentText
+                vc.create = false
+            }else{
+                vc.create = true
+            }
             vc.delegate = self
+            
         }
     }
     
@@ -51,10 +62,10 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //tasks.remove(at: indexPath.row)
         if realmDatabase{
-            RealmDatabase.shared.updateTask(currentTask: indexPath.row)
+            RealmDatabase.shared.updateTask(currentTask: indexPath.row, changeText: tasksRealm[indexPath.row].task, changeComplete: !tasksRealm[indexPath.row].taskComplete)
             tasksRealm = RealmDatabase.shared.loadTasks()
         } else {
-            CoreDataDatabase.shared.updateTask(currentTask: indexPath.row)
+            CoreDataDatabase.shared.updateTask(currentTask: indexPath.row, changeText: tasksDataCore[indexPath.row].task!, changeComplete: !tasksDataCore[indexPath.row].taskComplete)
             tasksDataCore = CoreDataDatabase.shared.loadTasks()
         }
 
@@ -75,7 +86,9 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate{
         let editingAction = UIContextualAction(style: .destructive, title: "Изменить") { _, _, complete in
             
             print("Нажато")
-                    
+            self.currentTask = indexPath.row
+            self.currentText = (self.realmDatabase ? self.tasksRealm[indexPath.row].task : self.tasksDataCore[indexPath.row].task)!
+            self.performSegue(withIdentifier: "ShowCreateTask", sender: self)
         }
                 
                 deleteAction.backgroundColor = .red
@@ -95,6 +108,16 @@ extension ToDoViewController: CreateTaskDelegate{
         if self.realmDatabase{
             self.tasksRealm = RealmDatabase.shared.loadTasks()
         } else {
+            self.tasksDataCore = CoreDataDatabase.shared.loadTasks()
+        }
+        tableView.reloadData()
+    }
+    func changeTask(currentTask: Int,changeText: String) {
+        if realmDatabase{
+            RealmDatabase.shared.updateTask(currentTask: currentTask, changeText: changeText, changeComplete: false)
+            self.tasksRealm = RealmDatabase.shared.loadTasks()
+        } else {
+            CoreDataDatabase.shared.updateTask(currentTask: currentTask, changeText: changeText, changeComplete: false)
             self.tasksDataCore = CoreDataDatabase.shared.loadTasks()
         }
         tableView.reloadData()
