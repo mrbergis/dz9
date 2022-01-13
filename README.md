@@ -3,5 +3,6 @@
 ![Swift](https://img.shields.io/badge/framework-UIKit-orange)
 ![Swift](https://img.shields.io/badge/base-CoreData-green)
 ![Swift](https://img.shields.io/badge/base-RealmSwift-green)
+![Swift](https://img.shields.io/badge/other-JSONDecoder-red)
 
 Показываю что умею тыкаться в UIKit
