@@ -5,4 +5,4 @@
 ![Swift](https://img.shields.io/badge/base-RealmSwift-green)
 ![Swift](https://img.shields.io/badge/other-JSONDecoder-red)
 
-Показываю что умею тыкаться в UIKit
+Показываю что умею в UIKit
